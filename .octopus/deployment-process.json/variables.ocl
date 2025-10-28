@@ -1,0 +1,11 @@
+variable "API_BASE_URL" {
+    value "https://reqres.in" {
+        environment = ["development", "production", "qa"]
+    }
+}
+
+variable "EMAIL_RECIPIENTS" {
+    value "badridhewarsh@gmail.com" {
+        environment = ["development", "production", "qa"]
+    }
+}
