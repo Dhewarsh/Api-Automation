@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="API Test Suite">
+    <listeners>
+        <listener class-name="com.api.automation.utils.TestListener"/>
+    </listeners>
+    <test name="ReqRes API Tests">
+        <classes>
+            <class name="com.api.automation.tests.UserApiTest"/>
+            <class name="com.api.automation.tests.ResourcesApiTest"/>
+            <class name="com.api.automation.tests.AuthenticationApiTest"/>
+        </classes>
+    </test>
+</suite>

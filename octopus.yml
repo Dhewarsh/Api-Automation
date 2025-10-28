@@ -1,0 +1,62 @@
+# Octopus deployment configuration
+name: API-Test-Automation
+version: 1.0.#{Octopus.Version}
+
+# Environment variables
+variables:
+  TestEnvironment:
+    Dev: "https://reqres.in"
+    QA: "https://qa.reqres.in"
+    Staging: "https://staging.reqres.in"
+  EmailRecipients:
+    Dev: "dev-team@company.com"
+    QA: "qa-team@company.com"
+    Prod: "client@company.com"
+
+# Step template
+steps:
+  - step: Run API Tests
+    script: |
+      echo "Running API Tests for #{Octopus.Environment.Name}"
+      mvn clean test -Dbase.url=#{TestEnvironment} -DemailRecipients=#{EmailRecipients}
+
+  - step: Process Test Results
+    type: Octopus.Script
+    properties:
+      Octopus.Action.Script.ScriptSource: Inline
+      Octopus.Action.Script.Syntax: PowerShell
+      Octopus.Action.Script.ScriptBody: |
+        # Process test results
+        $testResults = Get-ChildItem -Path "target/surefire-reports" -Filter "*.xml"
+        
+        # Create Octopus artifacts
+        New-OctopusArtifact -Path "target/surefire-reports/emailable-report.html" -Name "TestReport.html"
+        
+        # Send notification
+        Send-OctopusNotification `
+          -Subject "API Test Results - #{Octopus.Environment.Name}" `
+          -To #{EmailRecipients} `
+          -Body "Test execution completed. See results at: #{Octopus.Web.BaseUrl}/app#/#{Octopus.Space.Id}/projects/#{Octopus.Project.Id}/releases/#{Octopus.Release.Number}"
+
+# Deployment targets
+environments:
+  - Dev
+  - QA
+  - Staging
+  - Production
+
+# Lifecycle
+lifecycle:
+  phases:
+    - name: Development
+      environments: [Dev]
+      automatic: true
+    - name: Testing
+      environments: [QA]
+      required: true
+    - name: Staging
+      environments: [Staging]
+      required: true
+    - name: Production
+      environments: [Production]
+      required: true
