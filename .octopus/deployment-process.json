@@ -17,7 +17,8 @@
         {
           "Name": "Run API Tests",
           "Properties": {
-            "Octopus.Action.TargetRoles": "api-test-runner"
+            "Octopus.Action.RunOnServer": "true",
+            "Octopus.Action.WorkerPool": "Default Worker Pool"
           },
           "Action": {
             "ActionType": "Octopus.Script",
@@ -40,9 +41,9 @@
         "Production": "#{ApiKey}"
       },
       "EMAIL_RECIPIENTS": {
-        "Development": "dev-team@company.com",
-        "QA": "qa-team@company.com",
-        "Production": "stakeholders@company.com"
+        "Development": "badridhewarsh@gmail.com",
+        "QA": "badridhewarsh@gmail.com",
+        "Production": "badridhewarsh@gmail.com"
       }
     }
   }
