@@ -1,0 +1,49 @@
+{
+  "Octopus": {
+    "Space": {
+      "Name": "Default"
+    },
+    "Project": {
+      "Name": "API Tests",
+      "Description": "API Test Automation Framework",
+      "ProjectGroupName": "API Testing"
+    },
+    "GitVersion": {
+      "Enabled": true,
+      "Version": "1.0.${Octopus.Release.Number}"
+    },
+    "DeploymentProcess": {
+      "Steps": [
+        {
+          "Name": "Run API Tests",
+          "Properties": {
+            "Octopus.Action.TargetRoles": "api-test-runner"
+          },
+          "Action": {
+            "ActionType": "Octopus.Script",
+            "Properties": {
+              "Octopus.Action.Script.ScriptBody": "Write-Host 'Running API Tests'\nmvn clean test -Denv=#{Octopus.Environment.Name}"
+            }
+          }
+        }
+      ]
+    },
+    "Variables": {
+      "API_BASE_URL": {
+        "Development": "https://reqres.in",
+        "QA": "https://reqres.in",
+        "Production": "https://reqres.in"
+      },
+      "API_KEY": {
+        "Development": "#{ApiKey}",
+        "QA": "#{ApiKey}",
+        "Production": "#{ApiKey}"
+      },
+      "EMAIL_RECIPIENTS": {
+        "Development": "dev-team@company.com",
+        "QA": "qa-team@company.com",
+        "Production": "stakeholders@company.com"
+      }
+    }
+  }
+}
