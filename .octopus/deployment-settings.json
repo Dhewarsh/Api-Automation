@@ -1,0 +1,30 @@
+{
+  "Octopus": {
+    "Step": [
+      {
+        "Name": "Set Environment Variables",
+        "Properties": {
+          "Octopus.Action.TargetRoles": "api-test-runner"
+        },
+        "Action": {
+          "ActionType": "Octopus.Script",
+          "Properties": {
+            "Octopus.Action.Script.ScriptBody": "# Set environment variables\n$env:API_BASE_URL = '#{API_BASE_URL}'\n$env:API_KEY = '#{API_KEY}'\n$env:EMAIL_RECIPIENTS = '#{EMAIL_RECIPIENTS}'"
+          }
+        }
+      },
+      {
+        "Name": "Run API Tests",
+        "Properties": {
+          "Octopus.Action.TargetRoles": "api-test-runner"
+        },
+        "Action": {
+          "ActionType": "Octopus.Script",
+          "Properties": {
+            "Octopus.Action.Script.ScriptBody": "Write-Host 'Running API Tests for #{Octopus.Environment.Name}'\nmvn clean test -Denv=#{Octopus.Environment.Name}"
+          }
+        }
+      }
+    ]
+  }
+}

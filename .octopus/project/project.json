@@ -1,0 +1,25 @@
+{
+    "Octopus": {
+        "$schema": "https://raw.githubusercontent.com/OctopusDeploy/api-definitions/main/octopus-server/2022.3/project-configuration-schema.json",
+        "projectName": "API Tests",
+        "description": "API Test Automation Framework",
+        "projectGroupName": "API Testing",
+        "variables": {
+            "API_BASE_URL": {
+                "development": "https://reqres.in",
+                "qa": "https://reqres.in",
+                "production": "https://reqres.in"
+            },
+            "API_KEY": {
+                "development": "#{ApiKey}",
+                "qa": "#{ApiKey}",
+                "production": "#{ApiKey}"
+            },
+            "EMAIL_RECIPIENTS": {
+                "development": "badridhewarsh@gmail.com",
+                "qa": "badridhewarsh@gmail.com",
+                "production": "badridhewarsh@gmail.com"
+            }
+        }
+    }
+}

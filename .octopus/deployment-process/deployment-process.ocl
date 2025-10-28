@@ -1,0 +1,28 @@
+step "Run API Tests" {
+    properties = {
+        Octopus.Action.TargetRoles = "api-test-worker"
+    }
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.RunOnServer = "true"
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                Write-Host "Running API Tests..."
+                mvn clean test -Denv=#{Octopus.Environment.Name}
+            EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "Default Worker Pool"
+
+        packages "api-tests" {
+            acquisition_location = "Server"
+            feed = "octopus-server-built-in"
+            package_id = "API-Tests"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
