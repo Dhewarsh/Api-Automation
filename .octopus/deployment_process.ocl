@@ -1,0 +1,40 @@
+step "Run API Tests" {
+    name = "Run API Tests"
+    properties = {
+        Octopus.Action.TargetRoles = "api-test-runner"
+    }
+
+    action {
+        action_type = "Octopus.Script"
+        is_required = true
+        
+        properties = {
+            Octopus.Action.RunOnServer = "true"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                Write-Host "Starting API Test Execution..."
+                
+                # Install Java if not present
+                if (-not (Get-Command java -ErrorAction SilentlyContinue)) {
+                    Write-Host "Installing Java..."
+                    choco install openjdk11 -y
+                }
+                
+                # Install Maven if not present
+                if (-not (Get-Command mvn -ErrorAction SilentlyContinue)) {
+                    Write-Host "Installing Maven..."
+                    choco install maven -y
+                }
+                
+                # Run the tests
+                Write-Host "Running API Tests..."
+                mvn clean test -Denv=#{Octopus.Environment.Name}
+                
+                Write-Host "Test execution completed."
+            EOT
+        }
+        
+        worker_pool = "Default Worker Pool"
+    }
+}
